@@ -25,11 +25,11 @@ begin
     obj_bulletsData.n := 0;
     // Reset the game to default values and print it
     resetBoard(board);
-    printBoard(board, obj_bulletsData, obj_player);
+    resetBullets(obj_bulletsData);
+    printBoard(board);
 
     while gameThreadFlag <> 0 do begin
 
-        // updateGameDynamics(obj_bulletsData);
         
         // Leer caracter presionado en este instante
         input := listenKeys(); 
@@ -53,9 +53,11 @@ begin
         updateBoard(board, obj_bulletsData, obj_player);
         // Write frame
         writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] []'); // Header info
-        printBoard(board, obj_bulletsData, obj_player);
+        printBoard(board);
         
-
+        // Update the possition of the dynamic objects of the game
+        updateGameDynamics(obj_bulletsData);
+        
         // Game speed
         delay(GAME_SPEED);
     end;

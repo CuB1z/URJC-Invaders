@@ -14,6 +14,7 @@ const
     HEIGHT = 10;
     PLAYER_W = 11; // Size of the player design
     PLAYER_H = 3;
+    MAX_BULLETS = 20; // Maximum number of bullets
 
 // Tipos
 type 
@@ -22,10 +23,11 @@ type
     end;
     t_bullet = RECORD
         i,j, damage:integer;
+        active:boolean;
     end;
     t_bulletsData = RECORD
         n:integer; // Number of bullets
-        bulletsList:array[0..40] of t_bullet;
+        bulletsList:array[0..MAX_BULLETS] of t_bullet;
     end;
     t_board = array[0..HEIGHT, 0..WIDTH] of char;
 
@@ -38,8 +40,8 @@ procedure strPush(var board:t_board; i,j:integer; str:string);
 procedure writePlayerPos(var board:t_board; i,j:integer);
 procedure playerShoot(var obj_bulletsData:t_bulletsData; obj_player:t_player);
 procedure writeBullets(var board:t_board; obj_bulletsData:t_bulletsData);
-
-
+procedure updateGameDynamics(var obj_bulletsData:t_bulletsData);
+procedure resetBullets(var obj_bulletsData:t_bulletsData);
 
 implementation // ============================================================[ IMPLEMENTATION ]>
 
@@ -98,6 +100,16 @@ end;
 
 
 // ----------------------------------------------------
+procedure resetBullets(var obj_bulletsData:t_bulletsData); 
+var x:integer;
+begin
+    for x:=0 to MAX_BULLETS do begin
+        obj_bulletsData.bulletsList[x].active := false;
+    end;
+end;
+
+
+// ----------------------------------------------------
 procedure strPush(var board:t_board; i,j:integer; str:string);
 var x,n:integer;
 begin
@@ -121,20 +133,41 @@ end;
 procedure writeBullets(var board:t_board; obj_bulletsData:t_bulletsData); 
 var x:integer;
 begin
-    for x:=0 to obj_bulletsData.n-1 do begin
-        board[obj_bulletsData.bulletsList[x].i, obj_bulletsData.bulletsList[x].j] := '-';
-    end;
+    for x:=0 to MAX_BULLETS do 
+        if obj_bulletsData.bulletsList[x].active then begin
+            // board[1, x] := '-';
+            board[obj_bulletsData.bulletsList[x].i, obj_bulletsData.bulletsList[x].j] := '-';
+            
+        end;
 end;
 
 
 // ----------------------------------------------------
 procedure playerShoot(var obj_bulletsData:t_bulletsData; obj_player:t_player); begin
+    if obj_bulletsData.n >= MAX_BULLETS then obj_bulletsData.n := 0;
+
     // Spawn 1 bullet relative to the player position
     obj_bulletsData.bulletsList[obj_bulletsData.n].i := obj_player.i+1;
     obj_bulletsData.bulletsList[obj_bulletsData.n].j := obj_player.j+PLAYER_W;
+    obj_bulletsData.bulletsList[obj_bulletsData.n].active := true;
 
     obj_bulletsData.n := obj_bulletsData.n + 1;
 end;
+
+
+// ----------------------------------------------------
+procedure updateGameDynamics(var obj_bulletsData:t_bulletsData); 
+var x:integer;
+begin
+
+    // Forward bullets possition
+    for x:=0 to MAX_BULLETS do begin
+        if obj_bulletsData.bulletsList[x].j >= WIDTH then
+            obj_bulletsData.bulletsList[x].active := false; 
+        obj_bulletsData.bulletsList[x].j := obj_bulletsData.bulletsList[x].j + 1;
+    end;
+end;
+
 
 
 // =========================================================================================
