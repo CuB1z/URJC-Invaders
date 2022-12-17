@@ -12,7 +12,7 @@ const WIDTH = 40; HEIGHT = 20;
 // Tipos
 type t_board = array[0..HEIGHT, 0..WIDTH] of char;
 // Subprogramas
-function gameThread():integer;
+function listenKeys():integer;
 procedure printBoard(board:t_board);
 procedure resetBoard(var board:t_board); 
 function parseKey(input:integer; var i,j:integer):integer;
@@ -22,7 +22,7 @@ function parseKey(input:integer; var i,j:integer):integer;
 implementation // ----------------------------------------------------
 
 // Leer inputs
-function gameThread():integer;
+function listenKeys():integer;
 var c:char; temp:integer;
 begin
     c := ' ';

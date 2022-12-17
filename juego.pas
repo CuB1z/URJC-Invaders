@@ -19,7 +19,7 @@ var
 //  --------------------------[ BEGIN ]-------------------------------------------------------
 begin 
     // Program Config 
-    cursoroff;
+    cursoroff();
     gameThreadFlag := 1;
     player_i := 0;
     player_j := 0;
@@ -30,7 +30,7 @@ begin
     while gameThreadFlag <> 0 do begin
         
         // Leer caracter presionado en este instante
-        input := gameThread; 
+        input := listenKeys(); 
 
         // Que hacer cuando presionamos una tecla
         if input <> 0 then begin
@@ -41,7 +41,7 @@ begin
         
         
         // Refresh game frame
-        clrscr;
+        clrscr();
         resetBoard(board);
         writeln(' [i = ', player_i, '] [j = ', player_j,']'); // Header info
         board[player_i, player_j] := '#';  
@@ -52,7 +52,7 @@ begin
     end;
     // -----------------/ end of main loop /----------------------
 
-    clrscr;
+    clrscr();
     writeln('Exiting the program...')
 
 end.
