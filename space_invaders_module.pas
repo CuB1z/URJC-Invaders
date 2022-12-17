@@ -6,7 +6,7 @@ unit space_invaders_module;
 
 interface // ----------------------------------------------------
 // Modulos
-uses crt, dos;
+uses crt, dos, keyboard;
 // Parametros del programa
 const WIDTH = 40; HEIGHT = 20;
 // Tipos
@@ -23,16 +23,19 @@ implementation // ----------------------------------------------------
 
 // Leer inputs
 function listenKeys():integer;
-var c:char; temp:integer;
+var kbdEvent:TKeyEvent; kbdCode: word;
 begin
-    c := ' ';
-    temp := 0;
-        if keypressed then begin 
-            c := readkey();
-            if c <> ' ' then temp := ord(c);
-        end;
+    listenKeys := 0;
+    if PollKeyEvent <> 0 then begin
+        kbdEvent := GetKeyEvent();
+        kbdEvent := TranslateKeyEvent(kbdEvent);
+        kbdCode := GetKeyEventCode(kbdEvent);
 
-    listenKeys := temp;
+        // Clean buffer
+        while PollKeyEvent <> 0 do GetKeyEvent();
+
+        listenKeys := kbdCode;
+    end;
 end;
 
 
@@ -65,11 +68,11 @@ function parseKey(input:integer; var i,j:integer):integer; begin
     
     case input of
 
-        3: parseKey := 0; // Exit with Ctrl+C
-        75: if (j <> 0) then  j:=j-1;
-        72: if (i <> 0) then  i:=i-1;
-        80: if (i <> HEIGHT) then  i:=i+1;
-        77: if (j <> WIDTH) then  j:=j+1;
+        11779: parseKey := 0; // Exit with Ctrl+C
+        65315: if (j <> 0) then  j:=j-1; // Flecha izqda
+        65313: if (i <> 0) then  i:=i-1; // Flecha arriba
+        65319: if (i <> HEIGHT) then  i:=i+1; // Flecha abajo
+        65317: if (j <> WIDTH) then  j:=j+1; // Flecha decha
 
     end;
 end;

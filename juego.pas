@@ -1,9 +1,9 @@
 
-uses crt, dos, space_invaders_module;
+uses crt, dos, space_invaders_module, keyboard;
 
 
 // ------------------[ PARAMETROS DEL PROGRAMA ]----------------------------------------
-const GAME_SPEED = 50; // En (milis): mas bajo = mas rapido
+const GAME_SPEED = 10; // En (milis): mas bajo = mas rapido
 
 // ------------------[ VARIABLES GLOBALES ]----------------------------------------
 
@@ -19,6 +19,7 @@ var
 //  --------------------------[ BEGIN ]-------------------------------------------------------
 begin 
     // Program Config 
+    InitKeyboard();
     cursoroff();
     gameThreadFlag := 1;
     player_i := 0;
@@ -53,6 +54,7 @@ begin
     // -----------------/ end of main loop /----------------------
 
     clrscr();
+    DoneKeyboard();
     writeln('Exiting the program...')
 
 end.
