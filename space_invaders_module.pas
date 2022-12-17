@@ -32,7 +32,7 @@ begin
             if c <> ' ' then temp := ord(c);
         end;
 
-    gameThread := temp;
+    listenKeys := temp;
 end;
 
 
