@@ -31,7 +31,8 @@ type
 
 // Subprogramas
 function listenKeys():uint16;
-procedure printBoard(board:t_board; obj_bulletsData:t_bulletsData; obj_player:t_player);
+procedure printBoard(board:t_board);
+procedure updateBoard(var board:t_board; obj_bulletsData:t_bulletsData; obj_player:t_player);
 procedure resetBoard(var board:t_board); 
 procedure strPush(var board:t_board; i,j:integer; str:string);
 procedure writePlayerPos(var board:t_board; i,j:integer);
@@ -63,14 +64,9 @@ end;
 
 // ----------------------------------------------------
 // Imprimir el juego
-procedure printBoard(board:t_board; obj_bulletsData:t_bulletsData; obj_player:t_player); // IDEA: Imprimir linea por linea en vez de caracter por caracter
+procedure printBoard(board:t_board); 
 var i,j:integer; buff:string;
 begin
-
-    writeBullets(board, obj_bulletsData); // Write bullets possition to the board
-    writePlayerPos(board, obj_player.i, obj_player.j); // Write player position to the board
-
-    writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] []'); // Header info
 
     // Print game matrix
     for i:=0 to HEIGHT do begin
@@ -80,7 +76,13 @@ begin
         writeln(buff);
     end;
 
+end;
 
+
+// ----------------------------------------------------
+procedure updateBoard(var board:t_board; obj_bulletsData:t_bulletsData; obj_player:t_player); begin
+    writeBullets(board, obj_bulletsData); // Write bullets possition to the board
+    writePlayerPos(board, obj_player.i, obj_player.j); // Write player position to the board
 end;
 
 

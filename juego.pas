@@ -28,6 +28,8 @@ begin
     printBoard(board, obj_bulletsData, obj_player);
 
     while gameThreadFlag <> 0 do begin
+
+        // updateGameDynamics(obj_bulletsData);
         
         // Leer caracter presionado en este instante
         input := listenKeys(); 
@@ -47,7 +49,10 @@ begin
         // Refresh game frame
         clrscr();
         resetBoard(board);
+        // Update board values
+        updateBoard(board, obj_bulletsData, obj_player);
         // Write frame
+        writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] []'); // Header info
         printBoard(board, obj_bulletsData, obj_player);
         
 
