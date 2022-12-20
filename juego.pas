@@ -23,6 +23,7 @@ begin
     obj_player.i := 0; 
     obj_player.j := 0;
     obj_player.health := 100;
+    obj_player.score := 0;
     // Setup for game parameters
     obj_bulletsData.n := 0;
     obj_enemiesData.n := 0;
