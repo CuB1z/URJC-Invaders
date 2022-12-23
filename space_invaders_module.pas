@@ -1,6 +1,4 @@
 
-// Colision de bala con jugador por coordenada j 
-// Colision de bala con nave por coordenadas
 
 unit space_invaders_module;
 
@@ -20,6 +18,7 @@ const
     GAME_SPEED = 10; // En (milis): mas bajo = mas rapido
     CLOCK_RESET = 10000; // The max value the clock will reach before return to 0
     MAX_ENEMIES = 5;
+    LEVEL = 1; // From 1 (easy) to 10 (hard)
 
 // Tipos
 type
@@ -235,7 +234,7 @@ begin
     shootRate := (clock mod 10) = 0;
     for x:=0 to MAX_ENEMIES do begin
         if (obj_enemiesData.enemiesList[x].active = true) then begin 
-            if ( shootRate and (random(5)=0) ) then enemyShoot(obj_bulletsData, obj_enemiesData.enemiesList[x]);
+            if ( shootRate and (random(11 - LEVEL)=0) ) then enemyShoot(obj_bulletsData, obj_enemiesData.enemiesList[x]);
         end;
     end;
 end;

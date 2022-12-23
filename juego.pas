@@ -74,7 +74,21 @@ begin
 
         // Game clock
         clock := clock+1 mod CLOCK_RESET;
+
+        // Lose condition
+        if obj_player.health <= 0 then gameThreadFlag := 0;
     end;
+
+    clrscr;
+    writeln;
+    writeln('    +------------------------------------------------+');
+    writeln('    +      FIN DEL JUEGO:          SCORE: ', obj_player.score:8 ,'   +');
+    writeln('    +------------------------------------------------+');
+    writeln;
+    writeln('    Presione ENTER para continuar...');
+    DoneKeyboard();
+    readln;
+
 end;
 
 
@@ -86,11 +100,11 @@ begin
     randomize();
 
     // Game main loop
+    // score := mainLoop();
     mainLoop();
 
     // Exit from the program
     clrscr();
-    DoneKeyboard();
     cursoron;
     writeln('Exiting the program...')
 
