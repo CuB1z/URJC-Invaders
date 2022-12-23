@@ -89,6 +89,7 @@ begin
     DoneKeyboard();
     readln;
 
+    mainLoop := obj_player.score;
 end;
 
 
