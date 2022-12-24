@@ -98,7 +98,8 @@ begin
     for i:=0 to HEIGHT do begin
         buff := '';
         for j:=0 to WIDTH do
-            buff:=buff+board[i,j];
+            if ord(board[i,j]) < 30 then buff:=buff+' '
+            else buff:=buff+board[i,j];
         writeln('|'+buff+'|');
     end;
     write('+');
@@ -175,7 +176,7 @@ var x:integer;
 begin
     for x:=0 to MAX_ENEMIES do
         if obj_enemiesData.enemiesList[x].active then begin
-            strPush(board, obj_enemiesData.enemiesList[x].i, obj_enemiesData.enemiesList[x].j, obj_enemiesData.enemiesList[x].design);
+            strPush(board, obj_enemiesData.enemiesList[x].i, obj_enemiesData.enemiesList[x].j, chr(x)+obj_enemiesData.enemiesList[x].design);
         end;
 end;
 
@@ -282,20 +283,19 @@ begin
 
 
             // Bullet hit enemy/player
-            if (board[bi, bj] <> ' ') then begin 
+            if ((board[bi, bj] <> ' ') and (ord(board[bi,bj]) > 30)) then begin 
                 // Player hitted
                 if pj+PLAYER_W >= bj then obj_player.health := obj_player.health-10
                 // Enemy hitted
                 else if (bj > BORDER) then begin
                     obj_player.score := obj_player.score+100;
-                    for k:=0 to MAX_ENEMIES do
-                        if obj_enemiesData.enemiesList[k].active then if (obj_enemiesData.enemiesList[k].i = bi) and (obj_enemiesData.enemiesList[k].j >= bj-1) then
-                            obj_enemiesData.enemiesList[k].active := false;
+                    obj_enemiesData.enemiesList[ord(board[bi,bj-1])].active := false;
                 end;
 
                 obj_bulletsData.bulletsList[x].active := false;
             end;
 
+            // Check bullet collision with bullets
             if (
                 (obj_bulletsData.bulletsList[x].owner = 1) and (board[bi,bj+1] = 'o') or
                 (obj_bulletsData.bulletsList[x].owner = 2) and (board[bi,bj-1] = '-')
