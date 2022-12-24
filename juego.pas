@@ -3,7 +3,7 @@ uses crt, space_invaders_module, keyboard;
 
 
 // --------------------------------------------[ PARAMETROS DEL PROGRAMA ]>
-var score:integer;
+
 
 // --------------------------------------------------[ FUNCION MAIN LOOP ]>
 function mainLoop():integer; 
@@ -96,8 +96,8 @@ begin
 end;
 
 
-//  ----------------------------------------------------[ ENTRY POINT ]>
-begin 
+function game():integer; 
+begin
     // Program Config 
     InitKeyboard();
     cursoroff();
@@ -105,14 +105,14 @@ begin
 
     // Game main loop
     repeat
-        score := mainLoop();   
-    until (score <> -1);
+        game := mainLoop();   
+    until (game <> -1);
 
     // Exit banner
     clrscr;
     writeln;
     writeln('    +------------------------------------------------+');
-    writeln('    +      FIN DEL JUEGO:          SCORE: ', score:8 ,'   +');
+    writeln('    +      FIN DEL JUEGO:          SCORE: ', game:8 ,'   +');
     writeln('    +------------------------------------------------+');
     writeln;
     writeln('    Presione ENTER para continuar...');
@@ -124,5 +124,11 @@ begin
     cursoron;
     DoneKeyboard();
     writeln('Exiting the program...');
+end;
+
+//  ----------------------------------------------------[ ENTRY POINT ]>
+begin 
+    
+    game();
 
 end.

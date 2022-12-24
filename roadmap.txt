@@ -1,2 +1,1 @@
-- Pause menu
 - Dificulty selector
