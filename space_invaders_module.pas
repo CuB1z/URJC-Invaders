@@ -270,11 +270,10 @@ end;
 
 // ----------------------------------------------------
 procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData); 
-var x,k,pi,pj,bi,bj:integer;
+var x,pj,bi,bj:integer;
 begin
 
-    pi := obj_player.i; // Shorthand for player possition
-    pj := obj_player.j;
+    pj := obj_player.j; // Shorthand for player possition "j"
 
     for x:=0 to MAX_BULLETS do if obj_bulletsData.bulletsList[x].active then begin // Iter Active bullets
 
