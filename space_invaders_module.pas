@@ -280,6 +280,7 @@ begin
             bi := obj_bulletsData.bulletsList[x].i; // Shorthand for bullet possition
             bj := obj_bulletsData.bulletsList[x].j;
 
+
             if (board[bi, bj] <> ' ') then begin // Bullet hit enemy/player
                 // Player hitted
                 if (pi <= bi) and (pi+PLAYER_H >= bi) and (pj < bj) and (pj+PLAYER_W >= bj) then obj_player.health := obj_player.health-10
@@ -293,6 +294,11 @@ begin
 
                 obj_bulletsData.bulletsList[x].active := false;
             end;
+
+            if (
+                (obj_bulletsData.bulletsList[x].owner = 1) and (board[bi,bj+1] = 'o') or
+                (obj_bulletsData.bulletsList[x].owner = 2) and (board[bi,bj-1] = '-')
+                ) then obj_bulletsData.bulletsList[x].active := false;
         end;
 end;
 
