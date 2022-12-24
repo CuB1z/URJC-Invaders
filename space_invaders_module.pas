@@ -15,7 +15,8 @@ const
     PLAYER_H = 3;
     BORDER = 50;
     MAX_BULLETS = 100; // Maximum number of player bullets
-    GAME_SPEED = 10; // En (milis): mas bajo = mas rapido
+    GAME_SPEED = 50; // En (milis): mas bajo = mas rapido
+    GAME_DYNAMICS_REDUCTION = 2; // Dynamic elements will move X times slower (bullets are affected) (player not affected)
     CLOCK_RESET = 10000; // The max value the clock will reach before return to 0
     MAX_ENEMIES = 5;
     LEVEL = 1; // From 1 (easy) to 10 (hard)
@@ -63,7 +64,7 @@ procedure playerShoot(var obj_bulletsData:t_bulletsData; obj_player:t_player);
 procedure enemyShoot(var obj_bulletsData:t_bulletsData; obj_enemy:t_enemy);
 procedure updateGameDynamics(clock:uint16; var obj_bulletsData:t_bulletsData; var obj_enemiesData:t_enemiesData);
 procedure resetBullets(var obj_bulletsData:t_bulletsData);
-procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData);
+procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData; var obj_bulletsData:t_bulletsData);
 procedure resetEnemies(var obj_enemiesData:t_enemiesData);
 procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData); 
 procedure diffBoard(old, new:t_board; var changes:t_boardInt);
@@ -102,7 +103,7 @@ begin
     for i:=0 to HEIGHT do
         for j:=0 to WIDTH do 
             if (changes[i,j] = 1) then begin
-                gotoXY(j+3,i+2);
+                gotoXY(j+2,i+3); // Moving keeping in mind the offset genereated by the game stats (header)
                 write(board[i,j]);
             end;
             
@@ -237,37 +238,37 @@ end;
 // ----------------------------------------------------
 procedure updateGameDynamics(clock:uint16; var obj_bulletsData:t_bulletsData; var obj_enemiesData:t_enemiesData);
 var x:integer;
-    shootRate:boolean;
 begin
+    // if ((clock mod 4) = 0) then begin // Reduce the speed
+        
+        // --- BULLETS ---
+        // Forward bullets possition
+        for x:=0 to MAX_BULLETS do begin
+            if (obj_bulletsData.bulletsList[x].active = true) then begin // Move only active bullets
 
-    // --- BULLETS ---
-    // Forward bullets possition
-    for x:=0 to MAX_BULLETS do begin
-        if (obj_bulletsData.bulletsList[x].active = true) then begin // Move only active bullets
+                // Disappear bullet when hit the edge
+                if (obj_bulletsData.bulletsList[x].j <= 0) or (obj_bulletsData.bulletsList[x].j >= WIDTH) then
+                    obj_bulletsData.bulletsList[x].active := false;
 
-            // Disappear bullet when hit the edge
-            if (obj_bulletsData.bulletsList[x].j <= 0) or (obj_bulletsData.bulletsList[x].j >= WIDTH) then
-                obj_bulletsData.bulletsList[x].active := false;
-
-            // Move bullet position
-            obj_bulletsData.bulletsList[x].j := obj_bulletsData.bulletsList[x].j + obj_bulletsData.bulletsList[x].direction;
+                // Move bullet position
+                obj_bulletsData.bulletsList[x].j := obj_bulletsData.bulletsList[x].j + obj_bulletsData.bulletsList[x].direction;
+            end;
         end;
-    end;
 
-    // --- ENEMIES ---
-    shootRate := (clock mod 10) = 0;
-    for x:=0 to MAX_ENEMIES do begin
-        if (obj_enemiesData.enemiesList[x].active = true) then begin 
-            if ( shootRate and (random(11 - LEVEL)=0) ) then enemyShoot(obj_bulletsData, obj_enemiesData.enemiesList[x]);
-        end;
-    end;
+        // --- ENEMIES ---
+        enemyEvents(clock, obj_enemiesData, obj_bulletsData);        
+
+    // end;
 end;
 
 
 // ----------------------------------------------------
-procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData); begin
-    if obj_enemiesData.n >= MAX_ENEMIES then obj_enemiesData.n := 0;
-
+procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData; var obj_bulletsData:t_bulletsData); 
+var 
+    x:integer;
+    shootRate:boolean;
+begin
+    if obj_enemiesData.n >= MAX_ENEMIES then obj_enemiesData.n := 0; // Reset enemies counter
 
     if (clock mod 50 = 0) then begin // Spawn enemy
         obj_enemiesData.enemiesList[obj_enemiesData.n].active := true;
@@ -277,6 +278,14 @@ procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData); begin
 
         obj_enemiesData.n := obj_enemiesData.n+1;
     end;
+
+    shootRate := (clock mod 10) = 0; // Enemy shoots
+    for x:=0 to MAX_ENEMIES do begin
+        if (obj_enemiesData.enemiesList[x].active = true) then begin 
+            if ( shootRate and (random(11 - LEVEL)=0) ) then enemyShoot(obj_bulletsData, obj_enemiesData.enemiesList[x]);
+        end;
+    end;
+
 end;
 
 

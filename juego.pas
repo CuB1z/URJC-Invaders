@@ -29,12 +29,12 @@ begin
     obj_enemiesData.n := 0;
     // Reset the game to default values and print it
     resetBoard(board);
+    boardBackup := board;
     resetBullets(obj_bulletsData);
     resetEnemies(obj_enemiesData);
+    clrscr();
+    writeln();
     printFrame();
-    DoneKeyboard;
-    readln;
-    initKeyboard;
     printBoard(board, boardBackup);
 
     while gameThreadFlag <> 0 do begin
@@ -57,16 +57,16 @@ begin
         end;
         
         // Refresh game frame
-        clrscr();
         resetBoard(board);
         // Update board values
         updateBoard(board, obj_bulletsData, obj_player, obj_enemiesData);
-        // Write frame
+        // Write game headers
+        gotoXY(1,1);
         writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] [Health = ', obj_player.health ,'] [Score = ', obj_player.score ,'] [CLOCK: ', clock:6, ']'); // Header info
+        
+        // Print the game
         printBoard(board, boardBackup);
 
-        // Handle enemy events
-        enemyEvents(clock, obj_enemiesData);        
         // Update the possition of the dynamic objects of the game
         updateGameDynamics(clock, obj_bulletsData, obj_enemiesData);
         // Check hits
