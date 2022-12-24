@@ -6,7 +6,7 @@ interface // ===================================================================
         
 uses crt, keyboard, space_invaders_module;
 function mainLoop():integer; 
-function game():integer; 
+function play():integer; 
 
 
 implementation // ======================================================================================
@@ -102,7 +102,7 @@ begin
 end;
 
 
-function game():integer; 
+function play():integer; 
 begin
 
     // Initial banner
@@ -132,8 +132,8 @@ begin
 
     // Game main loop
     repeat
-        game := mainLoop();   
-    until (game <> -1);
+        play := mainLoop();   
+    until (play <> -1);
 
     // Exit banner
     clrscr;
