@@ -4,10 +4,10 @@ unit space_invaders_module;
 
 
 interface // ============================================================[ INTERFACE ]>
-// Modulos
+// Modules
 uses crt, dos, keyboard;
 
-// Parametros del programa
+// Program parameters
 const
     WIDTH = 80;    // Board size
     HEIGHT = 12;
@@ -15,12 +15,12 @@ const
     PLAYER_H = 3;
     BORDER = 50;
     MAX_BULLETS = 100; // Maximum number of player bullets
-    GAME_SPEED = 50; // En (milis): mas bajo = mas rapido
+    GAME_SPEED = 50; // Main loop dalay (millis): "lower nums." = "faster game"
     CLOCK_RESET = 10000; // The max value the clock will reach before return to 0
     MAX_ENEMIES = 5;
     LEVEL = 1; // From 1 (easy) to 10 (hard)
 
-// Tipos
+// Program Types
 type
     t_player = RECORD // Player object
         i,j, health, score:integer;
@@ -76,7 +76,7 @@ procedure printGameStats(obj_player:t_player; clock:uint16);
 implementation // ============================================================[ IMPLEMENTATION ]>
 
 // ----------------------------------------------------
-// Leer inputs
+// Read inputs without blocking the program workflow
 function listenKeys():uint16;
 var kbdEvent:TKeyEvent; kbdCode: word;
 begin
@@ -95,7 +95,7 @@ end;
 
 
 // ----------------------------------------------------
-// Imprimir el juego
+// Print the game interface
 procedure printBoard(board,backup:t_board; obj_player:t_player; clock:uint16);
 var i,j:integer; changes:t_boardInt;
 begin
@@ -117,6 +117,7 @@ end;
 
 
 // ----------------------------------------------------
+// Print just external frame of the game
 procedure printFrame();
 var i:integer;
 begin
@@ -135,6 +136,7 @@ end;
 
 
 // ----------------------------------------------------
+// sync the board data with the possitions of all the game elements
 procedure updateBoard(var board:t_board; obj_bulletsData:t_bulletsData; obj_player:t_player; obj_enemiesData:t_enemiesData); begin
     writeBullets(board, obj_bulletsData); // Write bullets possition to the board
     writePlayerPos(board, obj_player.i, obj_player.j); // Write player position to the board
@@ -143,7 +145,7 @@ end;
 
 
 // ----------------------------------------------------
-// Borrar datos de la matriz del juego
+// Set all the elements to space characters
 procedure resetBoard(var board:t_board);
 var i,j:integer;
 begin
@@ -154,6 +156,7 @@ end;
 
 
 // ----------------------------------------------------
+// Set all the bullets to inactive
 procedure resetBullets(var obj_bulletsData:t_bulletsData);
 var x:integer;
 begin
@@ -164,6 +167,7 @@ end;
 
 
 // ----------------------------------------------------
+// Writes a string character by character in a matrix
 procedure strPush(var board:t_board; i,j:integer; str:string);
 var x,n:integer;
 begin
@@ -175,8 +179,9 @@ end;
 
 
 // ----------------------------------------------------
+// Write the player possition in the board matrix
 procedure writePlayerPos(var board:t_board; i,j:integer); begin
-    // Si se cambia el diseño, tambiend deben cambiarse PLAYER_H, PLAYER_W
+    // PLAYER_H, PLAYER_W must be changes if the design is changed
     strPush(board, i,j,   '\   />');
     strPush(board, i+1,j, '=|=[#]==>');
     strPush(board, i+2,j, '/   \>');
@@ -184,6 +189,7 @@ end;
 
 
 // ----------------------------------------------------
+// Write all the active bullets in the board matrix
 procedure writeBullets(var board:t_board; obj_bulletsData:t_bulletsData);
 var x:integer;
 begin
@@ -195,6 +201,7 @@ end;
 
 
 // ----------------------------------------------------
+// Write all the active enemies in the board matrix
 procedure writeEnemies(var board:t_board; obj_enemiesData:t_enemiesData);
 var x:integer;
 begin
@@ -207,6 +214,7 @@ end;
 
 
 // ----------------------------------------------------
+// Create a bullet shoot by the player with the corresponding parameters
 procedure playerShoot(var obj_bulletsData:t_bulletsData; obj_player:t_player); begin
     if obj_bulletsData.n >= MAX_BULLETS then obj_bulletsData.n := 0;
 
@@ -222,6 +230,7 @@ procedure playerShoot(var obj_bulletsData:t_bulletsData; obj_player:t_player); b
 end;
 
 // ----------------------------------------------------
+// Create a bullet shoot by an enemy with the corresponding parameters
 procedure enemyShoot(var obj_bulletsData:t_bulletsData; obj_enemy:t_enemy); begin
     if obj_bulletsData.n >= MAX_BULLETS then obj_bulletsData.n := 0;
 
@@ -237,6 +246,7 @@ procedure enemyShoot(var obj_bulletsData:t_bulletsData; obj_enemy:t_enemy); begi
 end;
 
 // ----------------------------------------------------
+// Update the possitions of the objects that pretend to be moving (bullets)
 procedure updateGameDynamics(clock:uint16; var obj_bulletsData:t_bulletsData; var obj_enemiesData:t_enemiesData);
 var x:integer;
 begin        
@@ -262,6 +272,7 @@ end;
 
 
 // ----------------------------------------------------
+// Manage enemy spawns and shooting rate
 procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData; var obj_bulletsData:t_bulletsData); 
 var 
     x:integer;
@@ -289,6 +300,7 @@ end;
 
 
 // ----------------------------------------------------
+// Set all the enemies to inactive
 procedure resetEnemies(var obj_enemiesData:t_enemiesData);
 var x:integer;
 begin
@@ -299,6 +311,7 @@ end;
 
 
 // ----------------------------------------------------
+// Check if some bullet is colliding or about to collide with something
 procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData); 
 var x,pj,bi,bj:integer;
 begin
@@ -336,6 +349,7 @@ end;
 
 
 // ----------------------------------------------------
+// Compare two matrix and return a matrix of 1's & 0's to mark differences between them
 procedure diffBoard(old, new:t_board; var changes:t_boardInt);
 var i,j:integer;
 begin
@@ -348,6 +362,7 @@ end;
 
 
 // ----------------------------------------------------
+// Manage PAUSE menu
 function pauseGame():integer; 
 var tmp:uint16; selected:integer;
 const MENU_OFFSET_X = 20; MENU_OFFSET_Y = 3; MAX_OPTS = 4;
@@ -393,6 +408,7 @@ end;
 
 
 // ----------------------------------------------------
+// Clear and rewrite the whole interface
 procedure resetScreen(var board:t_board);
 begin
     resetBoard(board);
@@ -403,6 +419,7 @@ end;
 
 
 // ----------------------------------------------------
+// Print the bottom part of the interface with the health and the score
 procedure printGameStats(obj_player:t_player; clock:uint16); 
 var i:integer; healthStr:string;
 begin
@@ -412,7 +429,7 @@ begin
 
     write('|',' HEALTH: ', healthStr, '          ');
     gotoXY(33, HEIGHT+5);
-    write('| SCORE: ', obj_player.score:10, ' | TIME ALIVE: ', clock*GAME_SPEED div 700);
+    write('| SCORE: ', obj_player.score:10, ' | TIME ALIVE: ', clock*GAME_SPEED div 700); // Not accurate time due to operations delay
     gotoXY(WIDTH+3, HEIGHT+5);
     writeln('|');
 

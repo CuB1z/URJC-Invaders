@@ -5,12 +5,12 @@ uses crt, windows, keyboard, space_invaders_module;
 function mainLoop():integer; 
 var
     clock:uint16;
-    input:uint16; // Almacena los carateres presionados
-    gameThreadFlag:integer; // Almacena un valor respectivo a la ejecucion del juego (0 = salir, otro = continuar)
-    board,boardBackup:t_board; // Matrix de elementos del juego y Matriz que guarda el ultimo estado del juego
-    obj_player:t_player; // Creamos un registro para el jugador
-    obj_bulletsData:t_bulletsData; // Array de datos de las balas
-    obj_enemiesData:t_enemiesData;
+    input:uint16; // Store the inputed characters
+    gameThreadFlag:integer; // Store the respective value about the game workflow (0 = exit, 1 = continue, -1 = Play again)
+    board,boardBackup:t_board; // Matrix of game elentes and backup
+    obj_player:t_player; // Player related data
+    obj_bulletsData:t_bulletsData; // Array bullets related data
+    obj_enemiesData:t_enemiesData; // Enemies related data
 begin
 
     // Initial setup
@@ -38,10 +38,10 @@ begin
         // Save the current state of `board` in `boardBackup`
         boardBackup := board;
 
-        // Leer caracter presionado en este instante
+        // Read characters if anyone is pressed
         input := listenKeys(); 
 
-        // Que hacer cuando presionamos una tecla
+        // Select what to do with the user input
         if input <> 0 then begin
             case input of
                 11779: gameThreadFlag := 0; // Exit with Ctrl+C
