@@ -11,7 +11,7 @@ var
     clock:uint16;
     input:uint16; // Almacena los carateres presionados
     gameThreadFlag:integer; // Almacena un valor respectivo a la ejecucion del juego (0 = salir, otro = continuar)
-    board:t_board; // Matrix de elementos del juego
+    board,boardBackup:t_board; // Matrix de elementos del juego y Matriz que guarda el ultimo estado del juego
     obj_player:t_player; // Creamos un registro para el jugador
     obj_bulletsData:t_bulletsData; // Array de datos de las balas
     obj_enemiesData:t_enemiesData;
@@ -31,11 +31,16 @@ begin
     resetBoard(board);
     resetBullets(obj_bulletsData);
     resetEnemies(obj_enemiesData);
-    printBoard(board);
+    printFrame();
+    DoneKeyboard;
+    readln;
+    initKeyboard;
+    printBoard(board, boardBackup);
 
     while gameThreadFlag <> 0 do begin
+        // Save the current state of `board` in `boardBackup`
+        boardBackup := board;
 
-        
         // Leer caracter presionado en este instante
         input := listenKeys(); 
 
@@ -58,23 +63,18 @@ begin
         updateBoard(board, obj_bulletsData, obj_player, obj_enemiesData);
         // Write frame
         writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] [Health = ', obj_player.health ,'] [Score = ', obj_player.score ,'] [CLOCK: ', clock:6, ']'); // Header info
-        printBoard(board);
+        printBoard(board, boardBackup);
 
         // Handle enemy events
-        enemyEvents(clock, obj_enemiesData);
-        
+        enemyEvents(clock, obj_enemiesData);        
         // Update the possition of the dynamic objects of the game
         updateGameDynamics(clock, obj_bulletsData, obj_enemiesData);
-
         // Check hits
         checkHits(board, obj_bulletsData, obj_player, obj_enemiesData);
-        
         // Game speed
         delay(GAME_SPEED);
-
         // Game clock
         clock := clock+1 mod CLOCK_RESET;
-
         // Lose condition
         if obj_player.health <= 0 then gameThreadFlag := 0;
     end;

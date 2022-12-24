@@ -45,11 +45,14 @@ type
         n:integer; // Number of bullets
         enemiesList:array[0..MAX_ENEMIES] of t_enemy;
     end;
+
     t_board = array[0..HEIGHT, 0..WIDTH] of char;
+    t_boardInt = array[0..HEIGHT, 0..WIDTH] of integer;
 
 // Subprogramas
 function listenKeys():uint16;
-procedure printBoard(board:t_board);
+procedure printBoard(board,backup:t_board);
+procedure printFrame();
 procedure updateBoard(var board:t_board; obj_bulletsData:t_bulletsData; obj_player:t_player; obj_enemiesData:t_enemiesData);
 procedure resetBoard(var board:t_board);
 procedure strPush(var board:t_board; i,j:integer; str:string);
@@ -63,6 +66,8 @@ procedure resetBullets(var obj_bulletsData:t_bulletsData);
 procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData);
 procedure resetEnemies(var obj_enemiesData:t_enemiesData);
 procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData); 
+procedure diffBoard(old, new:t_board; var changes:t_boardInt);
+
 
 implementation // ============================================================[ IMPLEMENTATION ]>
 
@@ -87,26 +92,43 @@ end;
 
 // ----------------------------------------------------
 // Imprimir el juego
-procedure printBoard(board:t_board);
-var i,j:integer; buff:string;
+procedure printBoard(board,backup:t_board);
+var i,j:integer; changes:t_boardInt;
 begin
 
+    diffBoard(backup, board, changes);
+
     // Print game matrix
+    for i:=0 to HEIGHT do
+        for j:=0 to WIDTH do 
+            if (changes[i,j] = 1) then begin
+                gotoXY(j+3,i+2);
+                write(board[i,j]);
+            end;
+            
+    {
+        if ord(board[i,j]) < 30 then buff:=buff // Print SPACE in case of ascii below 30
+        else buff:=buff+board[i,j];
+    }
+
+end;
+
+
+// ----------------------------------------------------
+procedure printFrame();
+var i:integer;
+begin
     write('+');
     for i:=0 to WIDTH do write('-');
     writeln('+');
+
     for i:=0 to HEIGHT do begin
-        buff := '';
-        for j:=0 to WIDTH do
-            if ord(board[i,j]) < 30 then buff:=buff+' ' // Print SPACE in case of ascii below 30
-            else buff:=buff+board[i,j];
-        writeln('|'+buff+'|');
+        writeln('|',' ':WIDTH+1, '|');
     end;
+
     write('+');
     for i:=0 to WIDTH do write('-');
     writeln('+');
-
-
 end;
 
 
@@ -305,6 +327,16 @@ begin
         end;
 end;
 
+// ----------------------------------------------------
+procedure diffBoard(old, new:t_board; var changes:t_boardInt);
+var i,j:integer;
+begin
+    for i:=0 to HEIGHT do
+        for j:=0 to WIDTH do begin
+            if new[i,j] <> old[i,j] then changes[i,j] := 1
+            else changes[i,j] := 0;
+        end;
+end;
 
 // =========================================================================================
 end.
