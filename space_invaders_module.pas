@@ -16,7 +16,6 @@ const
     BORDER = 50;
     MAX_BULLETS = 100; // Maximum number of player bullets
     GAME_SPEED = 50; // En (milis): mas bajo = mas rapido
-    GAME_DYNAMICS_REDUCTION = 2; // Dynamic elements will move X times slower (bullets are affected) (player not affected)
     CLOCK_RESET = 10000; // The max value the clock will reach before return to 0
     MAX_ENEMIES = 5;
     LEVEL = 1; // From 1 (easy) to 10 (hard)
@@ -238,27 +237,25 @@ end;
 // ----------------------------------------------------
 procedure updateGameDynamics(clock:uint16; var obj_bulletsData:t_bulletsData; var obj_enemiesData:t_enemiesData);
 var x:integer;
-begin
-    // if ((clock mod 4) = 0) then begin // Reduce the speed
-        
-        // --- BULLETS ---
-        // Forward bullets possition
-        for x:=0 to MAX_BULLETS do begin
-            if (obj_bulletsData.bulletsList[x].active = true) then begin // Move only active bullets
+begin        
 
-                // Disappear bullet when hit the edge
-                if (obj_bulletsData.bulletsList[x].j <= 0) or (obj_bulletsData.bulletsList[x].j >= WIDTH) then
-                    obj_bulletsData.bulletsList[x].active := false;
+    // --- BULLETS ---
+    // Forward bullets possition
+    for x:=0 to MAX_BULLETS do begin
+        if (obj_bulletsData.bulletsList[x].active = true) then begin // Move only active bullets
 
-                // Move bullet position
-                obj_bulletsData.bulletsList[x].j := obj_bulletsData.bulletsList[x].j + obj_bulletsData.bulletsList[x].direction;
-            end;
+            // Disappear bullet when hit the edge
+            if (obj_bulletsData.bulletsList[x].j <= 0) or (obj_bulletsData.bulletsList[x].j >= WIDTH) then
+                obj_bulletsData.bulletsList[x].active := false;
+
+            // Move bullet position
+            obj_bulletsData.bulletsList[x].j := obj_bulletsData.bulletsList[x].j + obj_bulletsData.bulletsList[x].direction;
         end;
+    end;
 
-        // --- ENEMIES ---
-        enemyEvents(clock, obj_enemiesData, obj_bulletsData);        
+    // --- ENEMIES ---
+    enemyEvents(clock, obj_enemiesData, obj_bulletsData);        
 
-    // end;
 end;
 
 
