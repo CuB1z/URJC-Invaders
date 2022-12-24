@@ -1,5 +1,15 @@
 
+
+unit game_main;
+    
+interface // ===========================================================================================
+        
 uses crt, keyboard, space_invaders_module;
+function mainLoop():integer; 
+function game():integer; 
+
+
+implementation // ======================================================================================
 
 // --------------------------------------------------[ FUNCION MAIN LOOP ]>
 function mainLoop():integer; 
@@ -142,10 +152,5 @@ begin
     DoneKeyboard();
     writeln('Exiting the program...');
 end;
- 
-//  ----------------------------------------------------[ ENTRY POINT ]>
-begin 
-    
-    game();
 
 end.
