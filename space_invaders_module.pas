@@ -10,7 +10,7 @@ uses crt, dos, keyboard;
 // Parametros del programa
 const
     WIDTH = 80;    // Board size
-    HEIGHT = 10;
+    HEIGHT = 12;
     PLAYER_W = 9; // Size of the player design
     PLAYER_H = 3;
     BORDER = 50;
@@ -67,6 +67,9 @@ procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData; var obj_b
 procedure resetEnemies(var obj_enemiesData:t_enemiesData);
 procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData); 
 procedure diffBoard(old, new:t_board; var changes:t_boardInt);
+function pauseGame():integer;
+procedure resetScreen(var board:t_board);
+
 
 
 implementation // ============================================================[ IMPLEMENTATION ]>
@@ -333,6 +336,7 @@ begin
         end;
 end;
 
+
 // ----------------------------------------------------
 procedure diffBoard(old, new:t_board; var changes:t_boardInt);
 var i,j:integer;
@@ -342,6 +346,61 @@ begin
             if new[i,j] <> old[i,j] then changes[i,j] := 1
             else changes[i,j] := 0;
         end;
+end;
+
+
+// ----------------------------------------------------
+function pauseGame():integer; 
+var tmp:uint16; selected:integer;
+const MENU_OFFSET_X = 20; MENU_OFFSET_Y = 3; MAX_OPTS = 4;
+begin
+    selected := 1;
+    tmp := 0;
+
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+1); write('#=========================================#');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+2); write('#              GAME PAUSED                #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+3); write('#              -----------                #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+4); write('#                                         #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+5); write('#            > RESUME                     #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+6); write('#              RESTART                    #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+7); write('#              EXIT                       #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+8); write('#                                         #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+9); write('#  (use the ARROWS and ENTER to navigate) #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+10);write('#          (Press "p" to resume)          #');
+    gotoXY(MENU_OFFSET_X, MENU_OFFSET_Y+11);write('#=========================================#');
+    
+    while (tmp <> 7181) and (tmp <> 6512) do begin
+        tmp := listenKeys();
+
+        if tmp <> 0 then begin            
+            gotoXY(MENU_OFFSET_X+13, MENU_OFFSET_Y+4+selected);
+            write(' ');
+
+            // Option navigation
+            case tmp of 
+                65313: if (selected > 1) then selected := selected-1; // Flecha arriba
+                65319: if (selected < MAX_OPTS) then selected := selected+1; // Flecha arriba
+            end;
+
+            gotoXY(MENU_OFFSET_X+13, MENU_OFFSET_Y+4+selected);
+            write('>');
+
+        end;
+    end;
+
+    if tmp = 6512 then pauseGame := 1 // Pressed "p"
+    else pauseGame := selected;
+
+end;
+
+
+// ----------------------------------------------------
+procedure resetScreen(var board:t_board);
+begin
+    resetBoard(board);
+    clrscr();
+    gotoXY(1,2);
+    printFrame();
 end;
 
 // =========================================================================================

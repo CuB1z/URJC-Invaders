@@ -3,7 +3,7 @@ uses crt, space_invaders_module, keyboard;
 
 
 // --------------------------------------------[ PARAMETROS DEL PROGRAMA ]>
-
+var score:integer;
 
 // --------------------------------------------------[ FUNCION MAIN LOOP ]>
 function mainLoop():integer; 
@@ -16,6 +16,7 @@ var
     obj_bulletsData:t_bulletsData; // Array de datos de las balas
     obj_enemiesData:t_enemiesData;
 begin
+
     // Initial setup
     gameThreadFlag := 1; // Set game flag to 1 (running)
     clock := 0;
@@ -37,7 +38,7 @@ begin
     printFrame();
     printBoard(board, boardBackup);
 
-    while gameThreadFlag <> 0 do begin
+    while gameThreadFlag > 0 do begin
         // Save the current state of `board` in `boardBackup`
         boardBackup := board;
 
@@ -53,6 +54,13 @@ begin
                 65319: if (obj_player.i < HEIGHT-PLAYER_H+1) then  obj_player.i := obj_player.i+1; // Flecha abajo
                 65317: if (obj_player.j < BORDER-PLAYER_W) then  obj_player.j := obj_player.j+1; // Flecha decha
                 14624: playerShoot(obj_bulletsData, obj_player); // Espacio
+                6512: begin // (P)ause
+                            case pauseGame() of
+                                2: gameThreadFlag := -1; // Restart
+                                3: gameThreadFlag := 0; // Exit
+                            end;
+                            resetScreen(boardBackup);
+                        end; 
             end;
         end;
         
@@ -62,7 +70,7 @@ begin
         updateBoard(board, obj_bulletsData, obj_player, obj_enemiesData);
         // Write game headers
         gotoXY(1,1);
-        writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] [Health = ', obj_player.health ,'] [Score = ', obj_player.score ,'] [CLOCK: ', clock:6, ']'); // Header info
+        writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] [Health = ', obj_player.health ,'] [Score = ', obj_player.score ,'] [CLOCK: ', clock:6, ']    '); // Header info
         
         // Print the game
         printBoard(board, boardBackup);
@@ -79,17 +87,12 @@ begin
         if obj_player.health <= 0 then gameThreadFlag := 0;
     end;
 
-    clrscr;
-    writeln;
-    writeln('    +------------------------------------------------+');
-    writeln('    +      FIN DEL JUEGO:          SCORE: ', obj_player.score:8 ,'   +');
-    writeln('    +------------------------------------------------+');
-    writeln;
-    writeln('    Presione ENTER para continuar...');
-    DoneKeyboard();
-    readln;
+    // Return value
+    case gameThreadFlag of 
+        0:  mainLoop := obj_player.score;
+        -1: mainLoop := -1;
+    end;
 
-    mainLoop := obj_player.score;
 end;
 
 
@@ -101,13 +104,25 @@ begin
     randomize();
 
     // Game main loop
-    // score := mainLoop();
-    mainLoop();
+    repeat
+        score := mainLoop();   
+    until (score <> -1);
 
-    // Exit from the program
+    // Exit banner
+    clrscr;
+    writeln;
+    writeln('    +------------------------------------------------+');
+    writeln('    +      FIN DEL JUEGO:          SCORE: ', score:8 ,'   +');
+    writeln('    +------------------------------------------------+');
+    writeln;
+    writeln('    Presione ENTER para continuar...');
+    DoneKeyboard();
+    readln;
+
+    // Clearing settings before exiting from the program
     clrscr();
     cursoron;
     DoneKeyboard();
-    writeln('Exiting the program...')
+    writeln('Exiting the program...');
 
 end.
