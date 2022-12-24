@@ -1,2 +1,4 @@
 grupo.zip
 test*
+*.o
+*.exe
