@@ -1,9 +1,5 @@
 
-uses crt, space_invaders_module, keyboard;
-
-
-// --------------------------------------------[ PARAMETROS DEL PROGRAMA ]>
-
+uses crt, windows, keyboard, space_invaders_module;
 
 // --------------------------------------------------[ FUNCION MAIN LOOP ]>
 function mainLoop():integer; 
@@ -98,6 +94,27 @@ end;
 
 function game():integer; 
 begin
+
+    // Initial banner
+    SetConsoleOutputCP(CP_UTF8);
+    writeln();
+    writeln('      __  _____     _______  ____                 __          ');
+    writeln('     / / / / _ \__ / / ___/ /  _/__ _  _____ ____/ /__ _______');
+    writeln('    / /_/ / , _/ // / /__  _/ // _ \ |/ / _ `/ _  / -_) __(_-<');
+    writeln('    \____/_/|_|\___/\___/ /___/_//_/___/\_,_/\_,_/\__/_/ /___/');
+    writeln();
+    writeln('    #====================[ HOW TO PLAY ]====================#');
+    writeln();
+    writeln('     *** Shoot the enemies to get points and dont get hit ***');
+    writeln();
+    writeln('       + MOVEMENT: Use the arrows to move your character');
+    writeln('       + SHOOT: Press SPACE to shoot!');
+    writeln('       + PAUSE: Press "p" to pause the game');
+    writeln('       + EXIT: Press CTRL+C to exit the game');
+    writeln();
+    writeln();
+    writeln('    >>> Press ENTER to start...');
+    readln();
     // Program Config 
     InitKeyboard();
     cursoroff();
