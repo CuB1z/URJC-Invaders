@@ -284,7 +284,7 @@ begin
             // Bullet hit enemy/player
             if (board[bi, bj] <> ' ') then begin 
                 // Player hitted
-                if (pi <= bi) and (pi+PLAYER_H >= bi) and (pj < bj) and (pj+PLAYER_W >= bj) then obj_player.health := obj_player.health-10
+                if pj+PLAYER_W >= bj then obj_player.health := obj_player.health-10
                 // Enemy hitted
                 else if (bj > BORDER) then begin
                     obj_player.score := obj_player.score+100;
