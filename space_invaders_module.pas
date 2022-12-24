@@ -274,14 +274,15 @@ begin
     pi := obj_player.i; // Shorthand for player possition
     pj := obj_player.j;
 
-    for x:=0 to MAX_BULLETS do
-        if obj_bulletsData.bulletsList[x].active then begin // Active bullets
+    for x:=0 to MAX_BULLETS do if obj_bulletsData.bulletsList[x].active then begin // Iter Active bullets
 
-            bi := obj_bulletsData.bulletsList[x].i; // Shorthand for bullet possition
+            // Shorthand for bullet possition
+            bi := obj_bulletsData.bulletsList[x].i; 
             bj := obj_bulletsData.bulletsList[x].j;
 
 
-            if (board[bi, bj] <> ' ') then begin // Bullet hit enemy/player
+            // Bullet hit enemy/player
+            if (board[bi, bj] <> ' ') then begin 
                 // Player hitted
                 if (pi <= bi) and (pi+PLAYER_H >= bi) and (pj < bj) and (pj+PLAYER_W >= bj) then obj_player.health := obj_player.health-10
                 // Enemy hitted
