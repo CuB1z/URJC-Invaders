@@ -1,5 +1,5 @@
 
-uses crt, windows, keyboard, space_invaders_module;
+uses crt, keyboard, space_invaders_module;
 
 // --------------------------------------------------[ FUNCION MAIN LOOP ]>
 function mainLoop():integer; 
@@ -17,8 +17,8 @@ begin
     gameThreadFlag := 1; // Set game flag to 1 (running)
     clock := 0;
     // Setup for player parameters
-    obj_player.i := 0; 
-    obj_player.j := 0;
+    obj_player.i := 1; 
+    obj_player.j := 1;
     obj_player.health := 100;
     obj_player.score := 0;
     // Setup for game parameters
@@ -64,9 +64,9 @@ begin
         resetBoard(board);
         // Update board values
         updateBoard(board, obj_bulletsData, obj_player, obj_enemiesData);
-        // Write game debug headers (debug)
-        gotoXY(1,1);
-        writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] [Health = ', obj_player.health ,'] [Score = ', obj_player.score ,'] [CLOCK: ', clock:6, ']    '); // Header info
+        // Write headers (debug)
+        // gotoXY(1,1);
+        // writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] [Health = ', obj_player.health ,'] [Score = ', obj_player.score ,'] [CLOCK: ', clock:6, ']    '); 
         
         // Print the game
         printBoard(board, boardBackup, obj_player, clock);
@@ -96,7 +96,7 @@ function game():integer;
 begin
 
     // Initial banner
-    SetConsoleOutputCP(CP_UTF8);
+    clrscr();
     writeln();
     writeln('      __  _____     _______  ____                 __          ');
     writeln('     / / / / _ \__ / / ___/ /  _/__ _  _____ ____/ /__ _______');
