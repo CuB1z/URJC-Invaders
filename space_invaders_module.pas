@@ -103,7 +103,8 @@ begin
         for j:=0 to WIDTH do 
             if (changes[i,j] = 1) then begin
                 gotoXY(j+2,i+3); // Moving keeping in mind the offset genereated by the game stats (header)
-                write(board[i,j]);
+                if ord(board[i,j]) > 30 then write(board[i,j])
+                else write(' ');
             end;
             
     {
