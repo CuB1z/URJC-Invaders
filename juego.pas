@@ -113,7 +113,7 @@ begin
     writeln('       + EXIT: Press CTRL+C to exit the game');
     writeln();
     writeln();
-    writeln('    >>> Press ENTER to start...');
+    write('    >>> Press ENTER to start...');
     readln();
     // Program Config 
     InitKeyboard();
