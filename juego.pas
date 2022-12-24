@@ -107,6 +107,7 @@ begin
     // Exit from the program
     clrscr();
     cursoron;
+    DoneKeyboard();
     writeln('Exiting the program...')
 
 end.
