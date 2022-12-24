@@ -1,0 +1,3 @@
+- Improve console print speed (change detect algorith)
+- Pause menu
+- Dificulty selector
