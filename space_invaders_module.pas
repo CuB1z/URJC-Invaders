@@ -98,7 +98,7 @@ begin
     for i:=0 to HEIGHT do begin
         buff := '';
         for j:=0 to WIDTH do
-            if ord(board[i,j]) < 30 then buff:=buff+' '
+            if ord(board[i,j]) < 30 then buff:=buff+' ' // Print SPACE in case of ascii below 30
             else buff:=buff+board[i,j];
         writeln('|'+buff+'|');
     end;
@@ -176,6 +176,7 @@ var x:integer;
 begin
     for x:=0 to MAX_ENEMIES do
         if obj_enemiesData.enemiesList[x].active then begin
+            // Enemies are written with the literal ascii value before them as the first character
             strPush(board, obj_enemiesData.enemiesList[x].i, obj_enemiesData.enemiesList[x].j, chr(x)+obj_enemiesData.enemiesList[x].design);
         end;
 end;
@@ -289,6 +290,7 @@ begin
                 // Enemy hitted
                 else if (bj > BORDER) then begin
                     obj_player.score := obj_player.score+100;
+                    // Detect the value before the enemy to know the enemy index in the array
                     obj_enemiesData.enemiesList[ord(board[bi,bj-1])].active := false;
                 end;
 
