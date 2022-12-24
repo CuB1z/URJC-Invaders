@@ -51,7 +51,7 @@ type
 
 // Subprogramas
 function listenKeys():uint16;
-procedure printBoard(board,backup:t_board);
+procedure printBoard(board,backup:t_board; obj_player:t_player; clock:uint16);
 procedure printFrame();
 procedure updateBoard(var board:t_board; obj_bulletsData:t_bulletsData; obj_player:t_player; obj_enemiesData:t_enemiesData);
 procedure resetBoard(var board:t_board);
@@ -69,6 +69,7 @@ procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_pl
 procedure diffBoard(old, new:t_board; var changes:t_boardInt);
 function pauseGame():integer;
 procedure resetScreen(var board:t_board);
+procedure printGameStats(obj_player:t_player; clock:uint16);
 
 
 
@@ -95,7 +96,7 @@ end;
 
 // ----------------------------------------------------
 // Imprimir el juego
-procedure printBoard(board,backup:t_board);
+procedure printBoard(board,backup:t_board; obj_player:t_player; clock:uint16);
 var i,j:integer; changes:t_boardInt;
 begin
 
@@ -110,10 +111,7 @@ begin
                 else write(' ');
             end;
             
-    {
-        if ord(board[i,j]) < 30 then buff:=buff // Print SPACE in case of ascii below 30
-        else buff:=buff+board[i,j];
-    }
+    printGameStats(obj_player, clock);
 
 end;
 
@@ -402,6 +400,29 @@ begin
     gotoXY(1,2);
     printFrame();
 end;
+
+
+// ----------------------------------------------------
+procedure printGameStats(obj_player:t_player; clock:uint16); 
+var i:integer; healthStr:string;
+begin
+    healthStr := ' ';
+    gotoXY(1,HEIGHT+5);
+    for i:=1 to (obj_player.health*2 div 10) do healthStr := healthStr + '#';
+
+    write('|',' HEALTH: ', healthStr, '          ');
+    gotoXY(33, HEIGHT+5);
+    write('| SCORE: ', obj_player.score:10, ' | TIME ALIVE: ', clock*GAME_SPEED div 700);
+    gotoXY(WIDTH+3, HEIGHT+5);
+    writeln('|');
+
+    write('+');
+    for i:=0 to WIDTH do write('-');
+    writeln('+');
+
+end;
+
+
 
 // =========================================================================================
 end.

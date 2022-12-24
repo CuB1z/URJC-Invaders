@@ -32,7 +32,7 @@ begin
     clrscr();
     writeln();
     printFrame();
-    printBoard(board, boardBackup);
+    printBoard(board, boardBackup, obj_player, clock);
 
     while gameThreadFlag > 0 do begin
         // Save the current state of `board` in `boardBackup`
@@ -64,12 +64,12 @@ begin
         resetBoard(board);
         // Update board values
         updateBoard(board, obj_bulletsData, obj_player, obj_enemiesData);
-        // Write game headers
+        // Write game debug headers (debug)
         gotoXY(1,1);
         writeln(' [i = ', obj_player.i, '] [j = ', obj_player.j,'] [Health = ', obj_player.health ,'] [Score = ', obj_player.score ,'] [CLOCK: ', clock:6, ']    '); // Header info
         
         // Print the game
-        printBoard(board, boardBackup);
+        printBoard(board, boardBackup, obj_player, clock);
 
         // Update the possition of the dynamic objects of the game
         updateGameDynamics(clock, obj_bulletsData, obj_enemiesData);
@@ -142,7 +142,7 @@ begin
     DoneKeyboard();
     writeln('Exiting the program...');
 end;
-
+ 
 //  ----------------------------------------------------[ ENTRY POINT ]>
 begin 
     
