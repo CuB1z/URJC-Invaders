@@ -5,14 +5,17 @@ unit game_main;
 interface // ===========================================================================================
         
 uses crt, keyboard, space_invaders_module;
-function mainLoop():integer; 
+
+function mainLoop(var stats:t_stats):integer; 
+function play(var stats:t_stats):integer; 
 function play():integer; 
 
 
 implementation // ======================================================================================
 
+
 // --------------------------------------------------[ FUNCION MAIN LOOP ]>
-function mainLoop():integer; 
+function mainLoop(var stats:t_stats):integer; 
 var
     clock:uint16;
     input:uint16; // Store the inputed characters
@@ -34,6 +37,10 @@ begin
     // Setup for game parameters
     obj_bulletsData.n := 0;
     obj_enemiesData.n := 0;
+    // Stats initialization
+    stats.timeAlive := 0;
+    stats.kills := 0;
+    stats.score := 0;
     // Reset the game to default values and print it
     resetBoard(board);
     boardBackup := board;
@@ -59,7 +66,10 @@ begin
                 65315: if (obj_player.j > 0) then  obj_player.j := obj_player.j-1; // Flecha izqda
                 65319: if (obj_player.i < HEIGHT-PLAYER_H+1) then  obj_player.i := obj_player.i+1; // Flecha abajo
                 65317: if (obj_player.j < BORDER-PLAYER_W) then  obj_player.j := obj_player.j+1; // Flecha decha
-                14624: playerShoot(obj_bulletsData, obj_player); // Espacio
+                14624: begin // Espacio
+                            playerShoot(obj_bulletsData, obj_player); 
+                            stats.shoots := stats.shoots+1; 
+                        end;
                 6512: begin // (P)ause
                             case pauseGame() of
                                 2: gameThreadFlag := -1; // Restart
@@ -83,15 +93,19 @@ begin
 
         // Update the possition of the dynamic objects of the game
         updateGameDynamics(clock, obj_bulletsData, obj_enemiesData);
-        // Check hits
-        checkHits(board, obj_bulletsData, obj_player, obj_enemiesData);
+        // Check hits (update stats)
+        stats.kills := stats.kills + checkHits(board, obj_bulletsData, obj_player, obj_enemiesData);
         // Game speed
         delay(GAME_SPEED);
         // Game clock
         clock := clock+1 mod CLOCK_RESET;
+        stats.timeAlive := stats.timeAlive+GAME_SPEED+25; // Aprox. time (stats). We use 125ms as the calcs time
         // Lose condition
         if obj_player.health <= 0 then gameThreadFlag := 0;
+
     end;
+
+    stats.score := obj_player.score; // (Stats)
 
     // Return value
     case gameThreadFlag of 
@@ -102,7 +116,7 @@ begin
 end;
 
 
-function play():integer; 
+function play(var stats:t_stats):integer; 
 begin
 
     // Initial banner
@@ -132,14 +146,14 @@ begin
 
     // Game main loop
     repeat
-        play := mainLoop();   
+        play := mainLoop(stats);   
     until (play <> -1);
 
     // Exit banner
     clrscr;
     writeln;
     writeln('    +------------------------------------------------+');
-    writeln('    +      FIN DEL JUEGO:          SCORE: ', game:8 ,'   +');
+    writeln('    +      FIN DEL JUEGO:          SCORE: ', play:8 ,'   +');
     writeln('    +------------------------------------------------+');
     writeln;
     writeln('    Presione ENTER para continuar...');
@@ -152,5 +166,13 @@ begin
     DoneKeyboard();
     writeln('Exiting the program...');
 end;
+
+// Overload the play function to allow skipping parameters
+function play():integer; 
+var stats:t_stats;
+begin
+    play := play(stats);
+end;
+
 
 end.

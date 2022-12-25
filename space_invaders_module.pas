@@ -45,6 +45,9 @@ type
         n:integer; // Number of bullets
         enemiesList:array[0..MAX_ENEMIES] of t_enemy;
     end;
+    t_stats = RECORD
+        timeAlive, kills, score, shoots:integer;
+    end;
 
     t_board = array[0..HEIGHT, 0..WIDTH] of char;
     t_boardInt = array[0..HEIGHT, 0..WIDTH] of integer;
@@ -65,7 +68,7 @@ procedure updateGameDynamics(clock:uint16; var obj_bulletsData:t_bulletsData; va
 procedure resetBullets(var obj_bulletsData:t_bulletsData);
 procedure enemyEvents(clock:uint16; var obj_enemiesData:t_enemiesData; var obj_bulletsData:t_bulletsData);
 procedure resetEnemies(var obj_enemiesData:t_enemiesData);
-procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData); 
+function checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData):integer; 
 procedure diffBoard(old, new:t_board; var changes:t_boardInt);
 function pauseGame():integer;
 procedure resetScreen(var board:t_board);
@@ -312,10 +315,10 @@ end;
 
 // ----------------------------------------------------
 // Check if some bullet is colliding or about to collide with something
-procedure checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData); 
+function checkHits(board:t_board; var obj_bulletsData:t_bulletsData; var obj_player:t_player; var obj_enemiesData:t_enemiesData):integer; 
 var x,pj,bi,bj:integer;
 begin
-
+    checkHits:=0; // Initialize kills
     pj := obj_player.j; // Shorthand for player possition "j"
 
     for x:=0 to MAX_BULLETS do if obj_bulletsData.bulletsList[x].active then begin // Iter Active bullets
@@ -334,6 +337,7 @@ begin
                     obj_player.score := obj_player.score+100;
                     // Detect the value before the enemy to know the enemy index in the array
                     obj_enemiesData.enemiesList[ord(board[bi,bj-1])].active := false;
+                    checkHits := checkHits+1;
                 end;
 
                 obj_bulletsData.bulletsList[x].active := false;
