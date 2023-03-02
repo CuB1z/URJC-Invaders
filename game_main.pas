@@ -99,7 +99,7 @@ begin
         delay(GAME_SPEED);
         // Game clock
         clock := clock+1 mod CLOCK_RESET;
-        stats.timeAlive := stats.timeAlive+GAME_SPEED+25; // Aprox. time (stats). We use 125ms as the calcs time
+        if (clock mod (700 div GAME_SPEED) = 0) then stats.timeAlive := stats.timeAlive+1; // Time alive updates every 700ms + 300ms (aprox. for program operations)
         // Lose condition
         if obj_player.health <= 0 then gameThreadFlag := 0;
 
