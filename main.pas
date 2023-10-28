@@ -15,7 +15,7 @@
 
 {Datos de salida: Fichero ('userstats' / 'user + fecha.txt') --> Archivo de texto que ofrece las estadisticas del usuario. }
 
-program Consola_URJC;
+program main;
 
 uses crt, menuprograma;
 
@@ -37,7 +37,7 @@ repeat
   case option of
     1:UserRegistry(fichusers);
     2:UserLogin(fichusers,logged,loggeduser);
-    3:UserModify(loggeduser,logged, fichusers);
+    3:UserModify(loggeduser,logged,fichusers);
     4:logged := false;
     5:GameStart(logged,loggeduser,fichusers,fichdata);
   end;
