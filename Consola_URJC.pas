@@ -3,7 +3,6 @@ program Consola_URJC;
 {Autor 1: Jaime Portillo   }
 {Autor 2: Diego Sánchez    }
 {Autor 3: Daniel Santos    }
-{Autor 4: Gaizka Aranbarri }
 
 {Grupo: Grado en Ingenieria del Software, Grupo 2 (Oriol)}
 
