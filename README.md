@@ -1,5 +1,4 @@
 # Urjc Invaders - Ingeniería Software URJC
----
 
 [<img src="https://avatars.githubusercontent.com/u/47105148?v=4"
     width="50px">](https://github.com/PortiESP)
