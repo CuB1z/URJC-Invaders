@@ -2,15 +2,6 @@
 
 Terminal-based game developed in Pascal for the subject of Introduction to Programming at URJC.
 
-## 📋 Table of Contents
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Game Controls](#game-controls)
-- [Contributors](#contributors)
-- [License](#license)
-
 ## 📖 Introduction
 Urjc Invaders is a terminal-based game inspired by the classic Space Invaders. It is developed in Pascal and serves as a project for the Introduction to Programming course at Universidad Rey Juan Carlos (URJC).
 
