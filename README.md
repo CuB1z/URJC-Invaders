@@ -60,9 +60,9 @@ After running the executable, you will be presented with a menu where you can lo
 
 ## 📜 License
 
-Notion Lovers (c) by Diego Sánchez, Jaime Portillo, Daniel Santos
+URJC Invaders (c) by Diego Sánchez, Jaime Portillo, Daniel Santos
 
-Notion Lovers is licensed under a
+URJC Invaders is licensed under a
 Creative Commons Attribution-ShareAlike 4.0 International License.
 
 You should have received a copy of the license along with this
